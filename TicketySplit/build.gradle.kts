@@ -19,6 +19,9 @@ dependencies {
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.client.jackson)
 
+    implementation(libs.logback.classic)
+    implementation(libs.microutils.logging)
+
     implementation(libs.kotlincsv)
 
     testImplementation(kotlin("test"))

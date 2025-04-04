@@ -1,5 +1,9 @@
 package com.marctatham.ticketysplit
 
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger {}
+
 fun main() {
-    println("Hello, World!")
+    logger.info { ("Hello, World!") }
 }

@@ -3,9 +3,14 @@ kotlin = "1.9.10"
 kotlinx-coroutines = "1.7.3"
 ktor = "2.3.4"
 kotlincsv = "1.2.0"
+logback = "1.4.11"
+microutils-logging = "3.0.5"
 
 
 [libraries]
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+microutils-logging = { group = "io.github.microutils", name = "kotlin-logging-jvm", version.ref = "microutils-logging" }
+
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
@@ -15,6 +20,8 @@ ktor-client-jackson = { group = "io.ktor", name = "ktor-client-jackson", version
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 
 kotlincsv = { group = "com.github.doyaaaaaken", name = "kotlin-csv-jvm", version.ref = "kotlincsv" }  # Add this line
+
+
 
 
 
