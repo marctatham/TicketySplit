@@ -1,13 +1,20 @@
 [versions]
-ktor = "2.3.4"
-kotlinx-coroutines = "1.7.3"
 kotlin = "1.9.10"
+kotlinx-coroutines = "1.7.3"
+ktor = "2.3.4"
+kotlincsv = "1.2.0"
 
 
 [libraries]
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+ktor-client-jackson = { group = "io.ktor", name = "ktor-client-jackson", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+
+kotlincsv = { group = "com.github.doyaaaaaken", name = "kotlin-csv-jvm", version.ref = "kotlincsv" }  # Add this line
 
 
 
