@@ -1,8 +1,9 @@
 plugins {
-    kotlin("jvm") version "2.1.10"
+    kotlin("jvm") version libs.versions.kotlin.get()
+    application
 }
 
-group = "com.marctatham"
+group = "com.marctatham.ticketysplit"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -10,12 +11,22 @@ repositories {
 }
 
 dependencies {
+
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.kotlinx.coroutines.core)
+
     testImplementation(kotlin("test"))
 }
 
 tasks.test {
     useJUnitPlatform()
 }
+
 kotlin {
     jvmToolchain(17)
+}
+
+application {
+    mainClass.set("com.marctatham.ticketysplit.MainKt")
 }
