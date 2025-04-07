@@ -9,13 +9,19 @@ data class Fields(
     val description: Description? = null,
     val labels: List<String>,
     @SerialName("customfield_10105") val storyPoints: Double? = null,
-    val parent: Parent? = null
+    val parent: Parent? = null,
+    val project: Project? = null,
+    val issueType: IssueType? = null,
 )
 
 @Serializable
-data class Parent(
-    val key: String?,
-)
+data class Parent(val key: String?)
+
+@Serializable
+data class Project(val id: String?)
+
+@Serializable
+data class IssueType(val id: String?)
 
 @Serializable
 data class Description(

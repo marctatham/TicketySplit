@@ -23,6 +23,7 @@ fun client(): HttpClient {
         defaultRequest {
             header(HttpHeaders.Authorization, "Basic $encodedAuth")
             header(HttpHeaders.Accept, "application/json")
+            header(HttpHeaders.ContentType, "application/json")
         }
     }
 
