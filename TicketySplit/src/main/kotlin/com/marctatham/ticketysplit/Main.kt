@@ -1,9 +1,6 @@
 package com.marctatham.ticketysplit
 
-import com.marctatham.ticketysplit.jira.client
-import com.marctatham.ticketysplit.jira.data.JiraTicket
-import io.ktor.client.call.*
-import io.ktor.client.request.*
+import com.marctatham.ticketysplit.jira.action.getJiraTicketDetails
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 
@@ -19,14 +16,7 @@ fun main(args: Array<String>) = runBlocking {
 
 }
 
-suspend fun getJiraTicketDetails(ticketId: String): JiraTicket {
-    val client = client()
-    val response: JiraTicket = client.use {
-        it.get("https://dowjones.atlassian.net/rest/api/3/issue/$ticketId").body()
-    }
 
-    return response
-}
 
 // simple utility extension to grab the simple string argument
 private fun Map<String, List<String>>.getStringArgumentValue(key: String): String = (this[key] ?: emptyList()).first()
