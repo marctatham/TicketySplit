@@ -8,6 +8,7 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 import java.util.*
 
 val email = System.getenv("JIRA_USERNAME") ?: error("JIRA_USERNAME environment variable not set")
@@ -17,7 +18,7 @@ val encodedAuth: String = Base64.getEncoder().encodeToString(authString.toByteAr
 
 fun client(): HttpClient {
     val client = HttpClient(CIO) {
-        install(ContentNegotiation) { json() }
+        install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         install(Logging) { level = LogLevel.ALL }
         defaultRequest {
             header(HttpHeaders.Authorization, "Basic $encodedAuth")

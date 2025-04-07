@@ -14,7 +14,7 @@ fun main(args: Array<String>) = runBlocking {
     logger.info { ("Hello, World! $") }
 
     // let's query a ticket status to validate that it's all setup
-    val ticket = getJiraTicketDetails("DJMA-5836")
+    val ticket = getJiraTicketDetails("DJMA-5506")
     logger.info { "ticket: $ticket" }
 
 }

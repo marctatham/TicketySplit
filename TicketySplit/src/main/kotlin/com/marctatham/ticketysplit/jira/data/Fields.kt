@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Fields(
     val summary: String,
-    val description: String?
+    val description: Description?
 )
