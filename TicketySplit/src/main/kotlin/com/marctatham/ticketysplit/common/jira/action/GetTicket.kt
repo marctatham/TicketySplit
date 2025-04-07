@@ -1,7 +1,7 @@
-package com.marctatham.ticketysplit.jira.action
+package com.marctatham.ticketysplit.common.jira.action
 
-import com.marctatham.ticketysplit.jira.client
-import com.marctatham.ticketysplit.jira.data.JiraTicket
+import com.marctatham.ticketysplit.common.jira.client
+import com.marctatham.ticketysplit.common.jira.data.JiraTicket
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 

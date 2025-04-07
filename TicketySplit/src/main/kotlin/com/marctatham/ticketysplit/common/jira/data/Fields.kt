@@ -1,4 +1,4 @@
-package com.marctatham.ticketysplit.jira.data
+package com.marctatham.ticketysplit.common.jira.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

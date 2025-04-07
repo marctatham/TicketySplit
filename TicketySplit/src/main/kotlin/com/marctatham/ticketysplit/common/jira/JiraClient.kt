@@ -1,4 +1,4 @@
-package com.marctatham.ticketysplit.jira
+package com.marctatham.ticketysplit.common.jira
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
