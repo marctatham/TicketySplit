@@ -12,6 +12,7 @@ data class Fields(
     val parent: Parent? = null,
     val project: Project? = null,
     val issueType: IssueType? = null,
+    val components: List<Component>? = emptyList(),
 )
 
 @Serializable
@@ -22,6 +23,9 @@ data class Project(val id: String?)
 
 @Serializable
 data class IssueType(val id: String?)
+
+@Serializable
+data class Component(val id: String?)
 
 @Serializable
 data class Description(

@@ -14,6 +14,7 @@ private const val KEY_PARENT = "parent"
 private const val KEY_ISSUE_TYPE = "Issue Type"
 
 private const val VAL_PROJECT_DJMA = "15781" // DJMA project
+private const val VAL_COMPONENT_ANDROID = "18329" // Android Component
 
 private val logger = KotlinLogging.logger {}
 
@@ -93,8 +94,9 @@ private fun mapToJiraTicket(
             labels = labels,
             storyPoints = storyPoints,
             parent = Parent(parentKey),
-            project = Project(VAL_PROJECT_DJMA),
-            issueType = IssueType(issueType)
+            project = Project(id = VAL_PROJECT_DJMA),
+            issueType = IssueType(id = issueType),
+            components = listOf(Component(id = VAL_COMPONENT_ANDROID))
         )
     )
 }
