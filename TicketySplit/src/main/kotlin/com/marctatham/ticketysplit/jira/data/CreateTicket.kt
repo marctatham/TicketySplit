@@ -3,8 +3,6 @@ package com.marctatham.ticketysplit.jira.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class JiraTicket(
-    val id: String,
-    val key: String,
+data class CreateTicket(
     val fields: Fields
 )
