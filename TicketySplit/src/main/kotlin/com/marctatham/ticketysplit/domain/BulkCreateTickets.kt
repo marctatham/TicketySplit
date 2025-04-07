@@ -20,29 +20,46 @@ private val logger = KotlinLogging.logger {}
 suspend fun bulkCreateTickets(filePath: String) {
     // NOTE: each map is a row in the CSV file
     val parsedCsv: List<Map<String, String>> = parseCsvFile(filePath)
-    val withKey = parsedCsv.filter { it: Map<String, String> -> it.key().isNotBlank() }
 
-    logger.warn { "items withKey will be skipped!" }
-    withKey.forEach {
-        logger.debug { it }
-    }
+    // filter out unhealthy entries (unhealthy entries will be logged to console
+    val healthyRows: List<Map<String, String>> = filterHealthyEntries(parsedCsv)
 
-    logger.info { "\n" }
+    val jiraTickets: List<CreateTicket> = healthyRows.map { mapToJiraTicket(it) }
 
-    val withoutKey = parsedCsv.filter { it: Map<String, String> -> it.key().isBlank() }
-    logger.info { "items withoutKey will be created" }
-    withoutKey.forEach {
-        logger.debug { it }
-    }
+    logger.info { "HEALTHY ROWS:" }
+    logger.info { "============================================================" }
+    jiraTickets.forEach { logger.info { "${it.fields.issueType} - ${it.fields.summary}" } }
 
-    val jiraTickets: List<CreateTicket> = withoutKey.map { it: Map<String, String> ->
-        mapToJiraTicket(it)
-    }
-
-    // TODO: let's test this one:
+    // TODO: let's test just one for now:
     val ticket = jiraTickets.first()
     logger.info { "ticket: $ticket" }
     createTicket(ticket)
+}
+
+private fun filterHealthyEntries(rows: List<Map<String, String>>): List<Map<String, String>> {
+    val rowsWithoutSummary: List<Map<String, String>> = rows.filter { row -> row[KEY_SUMMARY]?.isBlank() ?: true }
+    val rowsWithKeys = rows.filter { row -> row.key().isNotBlank() }
+    val rowsWithoutIssueType = rows.filter { row -> (row[KEY_ISSUE_TYPE] ?: "").isBlank() }
+    val rowsHealthy = rows.filter {
+        !rowsWithKeys.contains(it)
+                && !rowsWithoutIssueType.contains(it)
+                && !rowsWithoutSummary.contains(it)
+    }
+
+    logger.info { "============================================================" }
+    logger.info { "Ticket Breakdown analysis:" }
+    logger.info { "healthy: [${rowsHealthy.size}]" }
+    logger.info { "ERROR:\t\trowsWithoutSummary: [${rowsWithoutSummary.size}]" }
+    logger.info { "ERROR:\t\trowsWithKeys: [${rowsWithKeys.size}]" }
+    logger.info { "ERROR:\t\trowsWithoutIssueType: [${rowsWithoutIssueType.size}]" }
+    logger.info { "============================================================" }
+
+    // TODO: useful for debugging dodgy data in the source CSV/Spreadsheet
+//    rowsWithKeys.debugFilteredRows("Already has key: ")
+//    rowsWithoutSummary.debugFilteredRows("NO SUMMARY: ")
+//    rowsWithoutIssueType.debugFilteredRows("MISSING ISSUE TYPE: ")
+//    logger.info { "============================================================" }
+    return rowsHealthy
 }
 
 
@@ -53,7 +70,7 @@ private fun mapToJiraTicket(
     val parentKey = row[KEY_PARENT] ?: error("Summary is required")
     val description = row[KEY_DESC] ?: ""
     val storyPoints = row[KEY_STORY_POINTS]?.toDoubleOrNull()
-    val issueTypeName = row[KEY_ISSUE_TYPE]?: error("Issue Type is required")
+    val issueTypeName = row[KEY_ISSUE_TYPE] ?: error("Issue Type is required")
     val issueType = mapIssueType(issueTypeName)
 
     val labels = listOf("bcn_automation") // we need some way to track the ticket was created by this script.
@@ -94,3 +111,8 @@ private fun mapIssueType(issueType: String): String {
 }
 
 private fun Map<String, String>.key() = this[KEY] ?: ""
+
+
+private fun List<Map<String, String>>.debugFilteredRows(reason: String) = this.forEach { row ->
+    logger.warn { "$reason: $row" }
+}
