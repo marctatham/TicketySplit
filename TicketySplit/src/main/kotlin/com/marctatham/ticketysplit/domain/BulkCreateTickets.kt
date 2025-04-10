@@ -16,6 +16,9 @@ private const val KEY_ISSUE_TYPE = "Issue Type"
 private const val VAL_PROJECT_DJMA = "15781" // DJMA project
 private const val VAL_COMPONENT_ANDROID = "18329" // Android Component
 
+private const val VAL_TEAM_ID_BCN_PLATFORM_1 = "f6c15a59-d333-4579-b07c-11e0ff27318e" // Platform Team
+private const val VAL_TEAM_NAME_BCN_PLATFORM_1 = "DJMA - Platform 1 (Barça)" // Platform Team
+
 private val logger = KotlinLogging.logger {}
 
 suspend fun bulkCreateTickets(filePath: String) {
@@ -25,16 +28,25 @@ suspend fun bulkCreateTickets(filePath: String) {
     // filter out unhealthy entries (unhealthy entries will be logged to console
     val healthyRows: List<Map<String, String>> = filterHealthyEntries(parsedCsv)
 
-    val jiraTickets: List<CreateTicket> = healthyRows.map { mapToJiraTicket(it) }
+    // NOTE: we only want to create task-level tickets (task, spike, bug)
+    val allTickets: List<CreateTicket> = healthyRows.map { mapToJiraTicket(it) }
+    val jiraTickets: List<CreateTicket> = allTickets.filter { it.fields.issueType?.isTaskLevel() ?: false }
+    val ticketsSkipped = allTickets.filterNot { it.fields.issueType?.isTaskLevel() ?: false }
+    if (ticketsSkipped.isNotEmpty()) {
+        logger.info { "Omitted Tickets: " }
+        ticketsSkipped.forEach { logger.info { "${it.fields.issueType} - ${it.fields.summary}" } }
+        logger.info { "============================================================" }
+    }
+
 
     logger.info { "HEALTHY ROWS:" }
-    logger.info { "============================================================" }
     jiraTickets.forEach { logger.info { "${it.fields.issueType} - ${it.fields.summary}" } }
+    logger.info { "============================================================" }
 
     // TODO: let's test just one for now:
-    val ticket = jiraTickets.first()
-    logger.info { "ticket: $ticket" }
-    createTicket(ticket)
+//    val ticket = jiraTickets.first()
+//    logger.info { "ticket: $ticket" }
+    //createTicket(ticket)
 }
 
 private fun filterHealthyEntries(rows: List<Map<String, String>>): List<Map<String, String>> {
@@ -68,7 +80,7 @@ private fun mapToJiraTicket(
     row: Map<String, String>,
 ): CreateTicket {
     val summary = row[KEY_SUMMARY] ?: error("Summary is required")
-    val parentKey = row[KEY_PARENT] ?: error("Summary is required")
+    val parentKey = (row[KEY_PARENT] ?: error("Summary is required")).takeIf { it.isNotEmpty() }
     val description = row[KEY_DESC] ?: ""
     val storyPoints = row[KEY_STORY_POINTS]?.toDoubleOrNull()
     val issueTypeName = row[KEY_ISSUE_TYPE] ?: error("Issue Type is required")
@@ -92,11 +104,16 @@ private fun mapToJiraTicket(
                 )
             ),
             labels = labels,
-            storyPoints = storyPoints,
-            parent = Parent(parentKey),
+            parent = parentKey?.let { Parent(it) },
             project = Project(id = VAL_PROJECT_DJMA),
             issueType = IssueType(id = issueType),
-            components = listOf(Component(id = VAL_COMPONENT_ANDROID))
+            components = listOf(Component(id = VAL_COMPONENT_ANDROID)),
+            team = VAL_TEAM_ID_BCN_PLATFORM_1,
+//            team = Team(
+//                id = VAL_TEAM_ID_BCN_PLATFORM_1,
+//                name = VAL_TEAM_NAME_BCN_PLATFORM_1,
+//                title = VAL_TEAM_NAME_BCN_PLATFORM_1,
+//            )
         )
     )
 }
@@ -117,4 +134,12 @@ private fun Map<String, String>.key() = this[KEY] ?: ""
 
 private fun List<Map<String, String>>.debugFilteredRows(reason: String) = this.forEach { row ->
     logger.warn { "$reason: $row" }
+}
+
+private fun IssueType.isTaskLevel(): Boolean = when (this.id) {
+    JiraIssueType.TASK,
+    JiraIssueType.BUG,
+    JiraIssueType.SPIKE -> true
+
+    else -> false
 }

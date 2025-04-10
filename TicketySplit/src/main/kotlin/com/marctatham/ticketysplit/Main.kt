@@ -19,7 +19,7 @@ fun main(args: Array<String>) = runBlocking {
 private suspend fun bulkLoad() {
     // todo: parse the CSV file
     // todo: create a ticket for each row
-    val filePath = "/Users/marctatham/Downloads/taskbreakdown.csv"
+    val filePath = "/Users/marctatham/Downloads/tasks.csv"
     bulkCreateTickets(filePath)
 
     logger.info { "TicketySplit complete" }

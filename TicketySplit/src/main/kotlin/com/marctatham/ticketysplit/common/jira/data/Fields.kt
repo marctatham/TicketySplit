@@ -11,8 +11,9 @@ data class Fields(
     @SerialName("customfield_10105") val storyPoints: Double? = null,
     val parent: Parent? = null,
     val project: Project? = null,
-    val issueType: IssueType? = null,
+    @SerialName("issuetype") val issueType: IssueType? = null,
     val components: List<Component>? = emptyList(),
+    @SerialName("customfield_12900") val team: String? = null,
 )
 
 @Serializable
@@ -20,6 +21,15 @@ data class Parent(val key: String?)
 
 @Serializable
 data class Project(val id: String?)
+
+// NOTE: this is the structure used when getting a ticket details
+//       when creating a ticket, it is simply the ID
+@Serializable
+data class Team(
+    val id: String?,
+//    val name: String?,
+//    val title: String?,
+)
 
 @Serializable
 data class IssueType(val id: String?)
