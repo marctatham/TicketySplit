@@ -19,6 +19,6 @@ suspend fun createTicket(
     }
 
     if (response.status.value != 201) {
-        throw Exception("Failed to create ticket: ${response.status}")
+        throw Exception("Failed to create ticket: \n${ticket.fields.summary} \n${response.status}")
     }
 }
