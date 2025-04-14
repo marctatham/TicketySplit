@@ -43,10 +43,9 @@ suspend fun bulkCreateTickets(filePath: String) {
     jiraTickets.forEach { logger.info { "${it.fields.issueType} - ${it.fields.summary}" } }
     logger.info { "============================================================" }
 
-    // TODO: let's test just one for now:
-//    val ticket = jiraTickets.first()
-//    logger.info { "ticket: $ticket" }
-    //createTicket(ticket)
+
+    logger.info { "\n\n\nCreating tickets!" }
+    jiraTickets.forEach { createTicket(it) }
 }
 
 private fun filterHealthyEntries(rows: List<Map<String, String>>): List<Map<String, String>> {
