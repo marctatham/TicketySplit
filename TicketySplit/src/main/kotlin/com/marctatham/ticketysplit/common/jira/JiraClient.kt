@@ -19,7 +19,7 @@ val encodedAuth: String = Base64.getEncoder().encodeToString(authString.toByteAr
 fun client(): HttpClient {
     val client = HttpClient(CIO) {
         install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
-        install(Logging) { level = LogLevel.ALL }
+        install(Logging) { level = LogLevel.BODY }
         defaultRequest {
             header(HttpHeaders.Authorization, "Basic $encodedAuth")
             header(HttpHeaders.Accept, "application/json")
